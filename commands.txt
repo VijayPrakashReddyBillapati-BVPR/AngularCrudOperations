@@ -1,0 +1,4 @@
+npm install @angular/flex-layout  --save
+npm install @angular/http@latest
+ng add @angular/material
+npm install --save bootstrap@4
