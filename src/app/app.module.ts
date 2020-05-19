@@ -19,6 +19,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import {MatExpansionModule} from '@angular/material/expansion';
 import {MatIconModule} from '@angular/material/icon'
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { DataServiceService } from './data-service.service';
 
 @NgModule({
   declarations: [
@@ -47,10 +48,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
     MatToolbarModule,
     MatCardModule
   ],
-  providers: [
-    { provide: MAT_DIALOG_DATA, useValue: {} },
-    { provide: MatDialogRef, useValue: {} }
-  ],
+  providers: [  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -38,8 +38,8 @@
 
                 <ng-container matColumnDef="delete">
                     <mat-header-cell *matHeaderCellDef> Delete </mat-header-cell>
-                    <mat-cell *matCellDef="let trainer">
-                        <button mat-raised-button color="warn" (click)='deleteItem(trainer)'> Delete </button>
+                    <mat-cell *matCellDef="let item let i= index">
+                        <button mat-raised-button color="warn" (click)='deleteItem(item.id, i)'> Delete </button>
                     </mat-cell>
                 </ng-container> 
 

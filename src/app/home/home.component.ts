@@ -6,6 +6,8 @@ import { MatSort, Sort } from '@angular/material/sort';
 import { FormControl, Validators } from '@angular/forms';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import {DataServiceService} from '../data-service.service'
+import { Products } from './products';
 
 
 function compare(a: number | string, b: number | string, isAsc: boolean) {
@@ -24,28 +26,45 @@ export class HomeComponent implements OnInit {
   addingnewitem: boolean = false
   Name: string = ""
   Color: string = ""
-  productObject: any = []
+  productObject: any=[]
   sortedData: any[];
   displayedColumns: string[] = ['id', 'name', 'color', 'edit', 'delete'];
   inputFormControl = new FormControl('', [Validators.required,]);
 
-  constructor(private http: HttpClient, private dialog: MatDialog, private router: Router, @Inject(MAT_DIALOG_DATA) public  data: any ) { }
+  constructor(private dataservice: DataServiceService,private http: HttpClient, private dialog: MatDialog, private router: Router ) { }
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+  
 
   ngOnInit(): void {
-    this.http.get("assets/products.json").subscribe(
-      response => {
-        this.productObject = new MatTableDataSource(response['products']);
-        this.productObject.paginator = this.paginator;
-        this.productObject.sort = this.sort;
-        console.log(this.productObject)
+    this.dataservice.getAllData().subscribe(
+     ( response: Products[]) => {
+      this.productObject = new MatTableDataSource<Products>(response['products']);
+      this.productObject.paginator = this.paginator;
+      this.productObject.sort = this.sort;
       }
     )
+    // this.http.get<Products[]>("assets/products.json").subscribe(
+    //   response => {
+    //     this.productObject=response['products']
+    //     // this.productObject = new MatTableDataSource(response['products']);
+    //     // this.productObject.paginator = this.paginator;
+    //     // this.productObject.sort = this.sort;
+    //     console.log(this.productObject)
+    //   }
+    // )
   }
 
+  // ngOnInit(): void {
+  //   this.productObject= this.dataservice.getAllData()
+  //       this.productObject = new MatTableDataSource(this.productObject);
+  //       this.productObject.paginator = this.paginator;
+  //       this.productObject.sort = this.sort;
+  //       console.log(this.productObject)
+  // }
+
   public doFilter = (value: string) => {
-    this.productObject.filter = value.trim().toLocaleLowerCase();
+   // this.productObject.filter = value.trim().toLocaleLowerCase();
   }
   sortData(sort: Sort) {
     const data = this.productObject.slice();
@@ -66,7 +85,12 @@ export class HomeComponent implements OnInit {
   }
 
   editItem(item:any){}
-  deleteItem(item:any){}
+  deleteItem(item:any, i: number){
+    console.log(item)
+    console.log(i)
+    this.productObject.splice(item, 1)
+    console.log("success")
+  }
   addnewItem(){}
 }
 
