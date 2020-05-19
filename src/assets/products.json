@@ -19,6 +19,26 @@
          "id": 4,
          "name": "shirt",
          "color": "white"
+      },
+      {
+         "id": 5,
+         "name": "t-shirt",
+         "color": "off white"
+      },
+      {
+         "id": 6,
+         "name": "jeans",
+         "color": "grey"
+      },
+      {
+         "id": 7,
+         "name": "hat",
+         "color": "red"
+      },
+      {
+         "id": 8,
+         "name": "shirt",
+         "color": "maroon"
       }
    ]
 }
