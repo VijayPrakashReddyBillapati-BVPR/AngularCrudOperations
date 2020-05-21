@@ -16,9 +16,7 @@ export class DataServiceService {
   
    getAllData(): Observable<Products[]> {     
     
-    return this.http.get<Products[]>("assets/products.json").pipe(
-      tap(data => console.log(data))
-    );
+    return this.http.get<Products[]>("assets/products.json")
  }
 
  getItems()

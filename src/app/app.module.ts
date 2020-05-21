@@ -19,12 +19,13 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import {MatExpansionModule} from '@angular/material/expansion';
 import {MatIconModule} from '@angular/material/icon'
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { DataServiceService } from './data-service.service';
+import { DialogBoxComponent } from './dialog-box/dialog-box.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
+    DialogBoxComponent,
   ],
   imports: [
     BrowserModule,
@@ -47,6 +48,9 @@ import { DataServiceService } from './data-service.service';
     MatIconModule,
     MatToolbarModule,
     MatCardModule
+  ],
+  entryComponents: [
+    DialogBoxComponent
   ],
   providers: [  ],
   bootstrap: [AppComponent]

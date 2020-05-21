@@ -7,7 +7,14 @@
               </div>
 
 
-            <mat-table [dataSource]="productObject" matSort (matSortChange)="sortData($event)" class="mat-elevation-z8">
+            <mat-table [dataSource]="productObject" matSort class="mat-elevation-z8">
+
+
+                <!-- index Column -->
+                <ng-container matColumnDef="index">
+                    <mat-header-cell mat-sort-header="index" *matHeaderCellDef>index</mat-header-cell>
+                    <mat-cell *matCellDef="let element; let i= index">{{i}}</mat-cell>
+                </ng-container>
 
                 <!-- id Column -->
                 <ng-container matColumnDef="id">
@@ -31,15 +38,15 @@
                 <!-- Action Column -->
                 <ng-container matColumnDef="edit">
                     <mat-header-cell *matHeaderCellDef> Edit </mat-header-cell>
-                    <mat-cell *matCellDef="let trainer">
-                        <button mat-raised-button color="primary" (click)='editItem(trainer)'> Edit</button>
+                    <mat-cell *matCellDef="let item">
+                        <button mat-raised-button color="primary" (click)="openDialog('Update',item)"> Edit</button>
                     </mat-cell>
                 </ng-container>
 
                 <ng-container matColumnDef="delete">
                     <mat-header-cell *matHeaderCellDef> Delete </mat-header-cell>
-                    <mat-cell *matCellDef="let item let i= index">
-                        <button mat-raised-button color="warn" (click)='deleteItem(item.id, i)'> Delete </button>
+                    <mat-cell *matCellDef="let item; let i= index">
+                        <button mat-raised-button color="warn" (click)="deleteRow(item, i)"> Delete </button>
                     </mat-cell>
                 </ng-container> 
 
@@ -51,6 +58,9 @@
             <mat-paginator [pageSizeOptions]="[5, 10, 15]" showFirstLastButtons></mat-paginator>
 
             <div class="fluid-container h4">
-                <button mat-button (click)="addnewItem()"><b>ADD ITEM</b></button>
+                <button mat-button (click)="openDialog('Add',{})" color="primary"><b>ADD ITEM</b></button>
+            </div>
+            <div class="fluid-container h4">
+                <button mat-button (click)="reset()"><b>RESET</b></button>
             </div>
 </div>
