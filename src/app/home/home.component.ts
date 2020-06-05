@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Inject } from '@angular/core';
+import { Component, OnInit, ViewChild, Inject, Optional, ElementRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { MatTableDataSource, MatTable } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
@@ -25,10 +25,12 @@ export class HomeComponent implements OnInit {
   displayedColumns: string[] = ['index','id', 'name', 'color', 'edit', 'delete'];
   inputFormControl = new FormControl('', [Validators.required,]);
 
-  constructor(private dataservice: DataServiceService,private http: HttpClient, private dialog: MatDialog, private router: Router ) { }
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
+  constructor(private dataservice: DataServiceService,private http: HttpClient, private dialog: MatDialog) { }
+  @ViewChild(MatPaginator,{static:true}) paginator: MatPaginator;
+  @ViewChild(MatSort,{static:true}) sort: MatSort;
   @ViewChild(MatTable,{static:true}) table: MatTable<any>;
+  @ViewChild('filter',  {static: true}) filter: ElementRef;
+  @Optional() @Inject(MAT_DIALOG_DATA) public data: Products
   
 
   ngOnInit(): void {
@@ -39,7 +41,8 @@ export class HomeComponent implements OnInit {
      //this.productObject= new MatTableDataSource<Products>(response['products'].slice()); 
      //this.productObject= new MatTableDataSource(response['products'].slice()); 
       this.productObject.paginator = this.paginator;
-      this.productObject.sort = this.sort;      
+      this.productObject.sort = this.sort;  
+      this.reset()     
       }
     )
   }
@@ -49,38 +52,10 @@ export class HomeComponent implements OnInit {
    console.log(this.productObject);
   }
   reset() {
-    this.productObject.data = this.itemList.slice();
+    this.productObject.data = this.itemList.slice();    
     this.table.renderRows();    
   }
 
-  editItem(item:any){}
-
-  deleteItem(itemId: number , index: number){
-    if(this.filtereddata){
-      console.log('filtered data')
-      const data = this.productObject.filteredData;
-      data.splice((this.paginator.pageIndex * this.paginator.pageSize) + index,1);
-      this.productObject.filteredData= data
-      console.log(itemId);
-      console.log(this.productObject.data.indexOf(itemId));
-      
-  //     const allData = this.productObject.data;
-  //     allData.splice((this.paginator.pageIndex * this.paginator.pageSize) + this.productObject.data.indexOf(itemId),1);
-  //     this.productObject.data= allData
-  // console.log(this.productObject.data);
-  
-      console.log("success")
-    }else{
-      console.log('entire  data')
-    const data = this.productObject.data;
-    data.splice((this.paginator.pageIndex * this.paginator.pageSize) + index, 1);
-    this.productObject.data = data;
-
-    console.log("success")
-    }
-    
-  }
-  addnewItem(){}
   openDialog(action,obj) {
     obj.action = action;
     const dialogRef = this.dialog.open(DialogBoxComponent, {
@@ -89,38 +64,27 @@ export class HomeComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log("after close method");
-      console.log(result.action);
+      console.log(result);
       
-      if(result.action == 'Add'){
+      if(result.data.action == 'Add'){
         this.addRowData(result.data);
-      }else if(result.action == 'Update'){
-        console.log("inside update if condition");
-        
+      }else if(result.data.action == 'Update'){       
         this.updateRowData(result.data);
-      }else if(result.action == 'Delete'){
-        this.deleteRowData(result.data);
-      }
+      }else if(result.data.action == 'Cancel'){ }
     });
 }
-deleteRow(item, index){
+deleteItem(item: any , index: number){
   item.index=index
   item.action='Delete'
-  console.log(item.id);
-  console.log(index);
   const dialogRef = this.dialog.open(DialogBoxComponent, {
     width: '350px',
-    data:item
+    data:item   
 
-  });
+  });  
   dialogRef.afterClosed().subscribe(result => {
-    console.log(result.id);
-  console.log(result.index);
     const data = this.productObject.data;
-    data.splice((this.paginator.pageIndex * this.paginator.pageSize) + result.index, 1);
-    this.productObject.data = data;
-    console.log("success")
-    
+    data.splice((this.paginator.pageIndex * this.paginator.pageSize) + result.data.index, 1);
+    this.productObject.data = data;    
   });
 }
 
@@ -133,26 +97,44 @@ addRowData(row_obj){
   this.table.renderRows();
   
 }
-updateRowData(row_obj){
-  console.log('#######################################################################');
-  
-  this.productObject = this.productObject.filter((value,key)=>{
-    if(value.id == row_obj.id){
-      value.name = row_obj.name;
+updateRowData(itemtoUpdate:any){
+  for (let item of this.productObject.data) {
+    if (item.id === itemtoUpdate.id) {
+      item.name=itemtoUpdate.name
+      item.color=itemtoUpdate.color
     }
-    return true;
-  });
-}
-deleteRowData(row_obj){
-  console.log("**********************************************");
+  }
   
-  console.log(row_obj);
+}
+}
+
+
+
+
+
+
+// deleteItem(itemId: number , index: number){
+//   if(this.filtereddata){
+//     const data = this.productObject.filteredData;
+//     data.splice((this.paginator.pageIndex * this.paginator.pageSize) + index,1);
+//     this.productObject.filteredData= data
+    
+// //     const allData = this.productObject.data;
+// //     allData.splice((this.paginator.pageIndex * this.paginator.pageSize) + this.productObject.data.indexOf(itemId),1);
+// //     this.productObject.data= allData
+// // console.log(this.productObject.data);
+
+//     console.log("success")
+//   }else{
+//     console.log('entire  data')
+//   const data = this.productObject.data;
+//   data.splice((this.paginator.pageIndex * this.paginator.pageSize) + index, 1);
+//   this.productObject.data = data;
+
+//   console.log("success")
+//   }
   
-  this.productObject = this.productObject.filter((value,key)=>{
-    return value.id != row_obj.id;
-  });
-}
-}
+// }
 
 
 

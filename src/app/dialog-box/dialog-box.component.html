@@ -2,7 +2,7 @@
 <h1 mat-dialog-title><strong>{{action}}</strong></h1>
 <div mat-dialog-content>
     <div class="mat-card" *ngIf="action != 'Delete'; else elseTemplate">
-    <form class="formwidth" (ngSubmit)="onSubmit()" #myForm="ngForm">
+    <form class="formwidth" (ngSubmit)="onSubmit(myForm.value)" #myForm="ngForm">
         <mat-form-field >
             <mat-label>ID</mat-label>
            <!-- <input placeholder="id" matInput [disabled]  value="{{local_data.id}}"> -->

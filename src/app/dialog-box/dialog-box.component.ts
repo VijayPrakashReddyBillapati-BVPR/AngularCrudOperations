@@ -28,14 +28,14 @@ export class DialogBoxComponent implements OnInit {
   }
 
   doAction(){
-console.log(this.local_data);
-console.log("doAction()");
-
+    console.log(this.local_data);
     this.dialogRef.close({event:this.action,data:this.local_data});
   }
 
   closeDialog(){
     this.dialogRef.close({event:'Cancel'});
+  }
+  onSubmit(data:any) {
   }
 
   ngOnInit(): void {
